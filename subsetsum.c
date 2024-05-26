@@ -2,6 +2,8 @@
 #include <stdlib.h>
 #include <stdbool.h>
 #include <string.h>
+#include <time.h>
+#include <math.h>   // MAKE SURE TO USE -lm 
 
 typedef struct Subset Subset;
 struct Subset {
@@ -111,18 +113,38 @@ void main() {
     
 
     for(int i = 0; i < iteration; i++) {
-        char buffer[100];
+        char *buffer = calloc(100, sizeof(char));
         int input_set[100];
         int input_size = 0;
         int target;
 
-        fscanf(fp, "%d", &target);
-        printf("Target: %d\n",target);
-        while(fgets(buffer, sizeof(buffer), fp)){ 
-            printf("\nLine: %s\n", buffer);
+        fscanf(fp, "%d\n", &target);
+        fgets(buffer, sizeof(buffer) * 100, fp);
+
+
+        char *ptr = buffer;
+        while(sscanf(ptr, "%d", &input_set[input_size])) {  // takes a line then reads the line as string
+            while (*ptr != ' ' && *ptr != '\0') ptr++;      // read number
+            if (*ptr == '\0') break;                        // break if reached the conditions
+            ptr++;                                          // skip the space
+            input_size++;                                   // increment
         }
+
+        struct timespec before = {0,0}, after = {0,0};
         
-        // subsetSum(input_set, target, input_size);
+        printf("\nFor k = %d and an input set of S = { ", target);
+        for(int i = 0 ; i < input_size; i++) printf("%d ",input_set[i]);
+        printf("}\n");
+
+        clock_gettime(CLOCK_MONOTONIC, &before);
+        subsetSum(input_set, target, input_size);
+        clock_gettime(CLOCK_MONOTONIC, &after);
+        double runtime = (((double) 1000*after.tv_sec + after.tv_nsec/1000000.0) - ((double) 1000*before.tv_sec + before.tv_nsec/1000000.0));
+        printf("Runtime: %lf ms\n", runtime);
+
+
+
+        free(buffer);
     }
 
     // int number_of_inputs = inp;
