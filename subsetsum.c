@@ -28,14 +28,8 @@ int isThisSubsetVisited(Subset* visitedSubsets, Subset* subsetInQuestion, int si
     return 0;
 }
 
-#define inp 7
-void main() { 
-    int number_of_inputs = inp;
-    int sampleSet[inp] = {1, 3, 5, 7, 2, 9, 11};
-    int target = 23;
-
+void subsetSum(int *sampleSet, int target, int number_of_inputs) {
     int noOfSubsets = 0;
-
     Subset *ptrTopOfStack = NULL;
     Subset *visitedSubsets = NULL;
 
@@ -94,4 +88,44 @@ void main() {
         visitedSubsets = currentSubset;
     }
     printf("Total number of valid subsets: %d\n",noOfSubsets);
+
+    while (visitedSubsets != NULL) {
+        Subset *temp = visitedSubsets;
+        visitedSubsets = visitedSubsets->next;
+        free(temp->numbers);
+        free(temp);
+    }
+}
+
+void main() { 
+    // Reading the file
+    FILE *fp;
+    fp = fopen("input.in", "r");
+    if (!fp) return;
+    int iteration = 0;              // number of times this code has to iterate
+
+    fscanf(fp, "%d\n", &iteration);
+
+    
+
+    
+
+    for(int i = 0; i < iteration; i++) {
+        char buffer[100];
+        int input_set[100];
+        int input_size = 0;
+        int target;
+
+        fscanf(fp, "%d", &target);
+        printf("Target: %d\n",target);
+        while(fgets(buffer, sizeof(buffer), fp)){ 
+            printf("\nLine: %s\n", buffer);
+        }
+        
+        // subsetSum(input_set, target, input_size);
+    }
+
+    // int number_of_inputs = inp;
+    // int sampleSet[inp] = {1, 3, 5, 7, 2, 9, 11};
+    // int target = 23;
 }
